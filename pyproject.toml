@@ -11,7 +11,7 @@ requires = ["hatchling"]
 
 [tool.pixi.project]
 channels = ["conda-forge"]
-platforms = ["osx-64"]
+platforms = ["osx-64", "linux-64"]
 
 [tool.pixi.dependencies]
 python = "3.11.*"
