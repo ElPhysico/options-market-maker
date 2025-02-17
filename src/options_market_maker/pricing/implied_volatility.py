@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.stats import norm
 from scipy.optimize import brentq
 from options_market_maker.pricing.black_scholes import black_scholes_price
 
