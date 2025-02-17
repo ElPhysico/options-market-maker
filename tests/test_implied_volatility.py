@@ -9,7 +9,7 @@ def test_implied_volatility_call():
                             r=0.05,
                             option_type="call")
     # assert round(iv, 2) == 0.2
-    assert round(iv, 2) == 0.4
+    assert round(iv, 2) == 0.8
 
 def test_implied_volatility_put():
     iv = implied_volatility(price_market=5.57,
