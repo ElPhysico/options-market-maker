@@ -140,11 +140,11 @@ def extract_sample_market_data(symbol, date):
             'bid': float(option['bid']),
             'ask': float(option['ask']),
             'implied_volatility': float(option['implied_volatility']),
-            'delta': float(option['delta']),
-            'gamma': float(option['gamma']),
-            'theta': float(option['theta']),
-            'vega': float(option['vega']),
-            'rho': float(option['rho'])
+            'Delta': float(option['delta']),
+            'Gamma': float(option['gamma']),
+            'Theta': float(option['theta']),
+            'Vega': float(option['vega']),
+            'Rho': float(option['rho'])
         }
         if option['type'] == 'call':
             samples['ncalls'] += 1
