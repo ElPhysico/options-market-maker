@@ -1,7 +1,10 @@
+import json
+from pathlib import Path
 import pytest
 from options_market_maker.pricing.black_scholes import black_scholes_price, black_scholes_greeks
 
 
+# theoretical tests
 def test_black_scholes_call():
     price = black_scholes_price(S=100,
                                 K=100,
@@ -69,3 +72,62 @@ def test_black_scholes_greeks():
     assert round(greeks['Vega'], 2) == 0.38
     assert round(greeks['Theta'], 2) == -0.02
     assert round(greeks['Rho'], 2) == 0.53
+
+
+# tests against real historical market data
+ROOT_DIR = Path.cwd()
+symbol = 'AAPL'
+date = '2023-09-19'
+samples_path = ROOT_DIR / f'data/samples/options/{symbol}/{symbol}_{date}.json'
+samples = json.loads(samples_path.read_text())
+
+def test_real_black_scholes_call():
+    n = samples['ncalls'] // 2
+    option = samples['calls'][n]
+    price = (option['bid'] + option['ask']) / 2
+    S = samples['symbol_close']
+    K = option['strike']
+    T = option['time-to-expiry']
+    r = 0.055   # risk-free rate is hard-coded from internet
+    sigma = option['implied_volatility']
+    predicted_price = black_scholes_price(S, K, T, r, sigma, 'call')
+
+    assert abs(price - predicted_price) / price < 0.05
+
+def test_real_black_scholes_put():
+    n = samples['nputs'] // 2
+    option = samples['puts'][n]
+    price = (option['bid'] + option['ask']) / 2
+    S = samples['symbol_close']
+    K = option['strike']
+    T = option['time-to-expiry']
+    r = 0.055   # risk-free rate is hard-coded from internet
+    sigma = option['implied_volatility']
+    predicted_price = black_scholes_price(S, K, T, r, sigma, 'put')
+
+    assert abs(price - predicted_price) / price < 0.05
+
+def test_real_black_scholes_greeks():
+    # calls greeks
+    n = samples['ncalls'] // 2
+    option = samples['calls'][n]
+    S = samples['symbol_close']
+    K = option['strike']
+    T = option['time-to-expiry']
+    r = 0.055   # risk-free rate is hard-coded from internet
+    sigma = option['implied_volatility']
+    greeks = black_scholes_greeks(S, K, T, r, sigma, 'call')
+    for g in greeks:
+        assert abs(option[g] - greeks[g]) / option[g] < 0.05
+
+    # puts greeks
+    n = samples['nputs'] // 2
+    option = samples['puts'][n]
+    S = samples['symbol_close']
+    K = option['strike']
+    T = option['time-to-expiry']
+    r = 0.055   # risk-free rate is hard-coded from internet
+    sigma = option['implied_volatility']
+    greeks = black_scholes_greeks(S, K, T, r, sigma, 'put')
+    for g in greeks:
+        assert abs(option[g] - greeks[g]) / option[g] < 0.05
