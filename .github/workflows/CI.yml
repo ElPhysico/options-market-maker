@@ -1,5 +1,8 @@
 name: CI - Run Tests
 
+env:
+  ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+
 on:
   push:
     branches:

@@ -20,6 +20,8 @@ scipy = "*"
 pandas = "*"
 matplotlib = "*"
 jupyter = "*"
+alpha_vantage = ">=3.0.0,<4"
+python-dotenv = ">=1.0.1,<2"
 
 [tool.pixi.pypi-dependencies]
 options_market_maker = { path = ".", editable = true }
