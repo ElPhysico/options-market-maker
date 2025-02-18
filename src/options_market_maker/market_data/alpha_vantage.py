@@ -8,7 +8,7 @@ from pathlib import Path
 load_dotenv()
 ALPHA_VANTAGE_API_KEY = os.getenv('ALPHA_VANTAGE_API_KEY')
 BASE_URL = 'https://www.alphavantage.co/query'
-RAW_DATA_DIR = Path('/Users/kklein/Dropbox/shared/finance_projects/options-market-maker/data/raw_data/options')
+RAW_DATA_DIR = Path('/Users/kklein/Dropbox/shared/finance_projects/options-market-maker/data/raw_data/')
 
 def get_historical_options(symbol, date):
     """Fetches a snapshot of all options data for a given symbol on a specific
@@ -22,7 +22,7 @@ def get_historical_options(symbol, date):
         dict: JSON response containing all option data for the given symbol and
             date.
     """
-    symbol_path = RAW_DATA_DIR / f'{symbol}'
+    symbol_path = RAW_DATA_DIR / f'options/{symbol}'
     symbol_path.mkdir(parents=True, exist_ok=True)
 
     filename = symbol_path / f'{symbol}_{date}'
@@ -52,4 +52,45 @@ def get_historical_options(symbol, date):
         json.dump(data, file, indent=4)
 
     return data
+
+
+def get_daily_time_series_stocks(symbol, outputsize='full'):
+    """Fetches a daily time series for a given symbol.
+
+    Parameters:
+        symbol (str): Stock ticker symbol (e.g. 'AAPL')
+        outputsize (str): 'full' or 'compact' for only last 100 days
+
+    Returns:
+        dict: JSON response containing the time series for the symbol.
+    """
+    path = RAW_DATA_DIR / f'stocks/'
+    path.mkdir(parents=True, exist_ok=True)
+
+    filename = path / f'{symbol}'
+
+    if filename.exists():
+        print(f'Loading cached data from {filename}')
+        return json.loads(filename.read_text())
     
+    if outputsize not in ['full', 'compact']:
+        raise ValueError('outputsize needs to be either "full" or "compact".')
+
+    if not ALPHA_VANTAGE_API_KEY:
+        raise ValueError('API key is missing. Set it in the .env file.')
+    
+    params = {
+        'function': 'TIME_SERIES_DAILY',
+        'symbol': symbol,
+        'outputsize': outputsize,
+        'datatype': json,
+        'apikey': ALPHA_VANTAGE_API_KEY
+    }
+
+    r = requests.get(BASE_URL, params)
+    data = r.json()
+
+    with open(filename, 'w') as file:
+        json.dump(data, file, indent=4)
+
+    return data
