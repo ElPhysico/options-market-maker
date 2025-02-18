@@ -136,15 +136,15 @@ def extract_sample_market_data(symbol, date):
         sample = {
             'expiration': option['expiration'],
             'time-to-expiry': T,
-            'strike': option['strike'],
-            'bid': option['bid'],
-            'ask': option['ask'],
-            'implied_volatility': option['implied_volatility'],
-            'delta': option['delta'],
-            'gamma': option['gamma'],
-            'theta': option['theta'],
-            'vega': option['vega'],
-            'rho': option['rho']
+            'strike': float(option['strike']),
+            'bid': float(option['bid']),
+            'ask': float(option['ask']),
+            'implied_volatility': float(option['implied_volatility']),
+            'delta': float(option['delta']),
+            'gamma': float(option['gamma']),
+            'theta': float(option['theta']),
+            'vega': float(option['vega']),
+            'rho': float(option['rho'])
         }
         if option['type'] == 'call':
             samples['ncalls'] += 1
