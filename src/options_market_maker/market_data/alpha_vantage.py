@@ -25,7 +25,7 @@ def get_historical_options(symbol, date):
     symbol_path = RAW_DATA_DIR / f'options/{symbol}'
     symbol_path.mkdir(parents=True, exist_ok=True)
 
-    filename = symbol_path / f'{symbol}_{date}'
+    filename = symbol_path / f'{symbol}_{date}.json'
     
     if filename.exists():
         print(f'Loading cached data from {filename}')
@@ -67,7 +67,7 @@ def get_daily_time_series_stocks(symbol, outputsize='full'):
     path = RAW_DATA_DIR / f'stocks/'
     path.mkdir(parents=True, exist_ok=True)
 
-    filename = path / f'{symbol}'
+    filename = path / f'{symbol}.json'
 
     if filename.exists():
         print(f'Loading cached data from {filename}')
@@ -83,7 +83,7 @@ def get_daily_time_series_stocks(symbol, outputsize='full'):
         'function': 'TIME_SERIES_DAILY',
         'symbol': symbol,
         'outputsize': outputsize,
-        'datatype': json,
+        'datatype': 'json',
         'apikey': ALPHA_VANTAGE_API_KEY
     }
 
