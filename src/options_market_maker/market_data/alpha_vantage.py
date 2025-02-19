@@ -9,8 +9,8 @@ from datetime import datetime
 load_dotenv()
 ALPHA_VANTAGE_API_KEY = os.getenv('ALPHA_VANTAGE_API_KEY')
 BASE_URL = 'https://www.alphavantage.co/query'
-RAW_DATA_DIR = Path('/Users/kklein/Dropbox/shared/finance_projects/options-market-maker/data/raw_data/')
-SAMPLE_DATA_DIR = Path('/Users/kklein/Dropbox/shared/finance_projects/options-market-maker/data/samples/')
+RAW_DATA_DIR = Path('~/Dropbox/shared/finance_projects/options-market-maker/data/raw_data/').expanduser()
+SAMPLE_DATA_DIR = Path('~/Dropbox/shared/finance_projects/options-market-maker/data/samples/').expanduser()
 
 def get_historical_options(symbol, date):
     """Fetches a snapshot of all options data for a given symbol on a specific
